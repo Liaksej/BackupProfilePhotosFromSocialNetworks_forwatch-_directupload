@@ -14,18 +14,20 @@ class VkToYaDsk:
         photoalbums = response.json()
         album_best_resolution = []
         for y in photoalbums['response']['items']:
-            # maximum_height_photo = max(y['sizes'], key=(lambda x: x['height']))
             maximum_height_photo = y['sizes'][-1]
             album_best_resolution.append(maximum_height_photo['url'])
         return album_best_resolution
 
     def save_photo(self, file_path_to_save, owner_id):
+        if not os.path.exists(file_path_to_save):
+            os.mkdir(file_path_to_save)
+            print('Successfully created directory', file_path_to_save)
         listik = self.download_photo(file_path_to_save, owner_id)
         for x, y in enumerate(listik):
             reqs = requests.get(y)
             with open(file_path_to_save + '/' + f'{str(x)}.jpg', 'wb') as code:
                 code.write(reqs.content)
-        return 'Done'
+        # return 'Done'
 
 
 class YaUploader(VkToYaDsk):
@@ -52,6 +54,8 @@ class YaUploader(VkToYaDsk):
                 response_upload.raise_for_status()
                 if response_upload.status_code == 201:
                     print(f'{count + 1} файл из {len(filelist)} файлов с именем {file} загружен успешно')
+        else:
+            print('Ошибка соединения. Попробуйте еще раз или обратитесь к разработчнику.')
 
 if __name__ == '__main__':
     token_vk = 'vk1.a.kYn1IfCsd4Di9_f7a0vwj6fhdbLvVa9cFhg7W_EKaczjrTMK8PbY5NJqK4mVbCuo382b5-EEI1moN4Su2sJvyeg1GkV2zGPAP0x9p-PmiXH9jI28O51q4HVpqczwe52WLkikcVdE6-c1zUim5gPJU9okS6hw3DizzYeZgeNTxNefCMQ8NVXJY0AT8_7FU2dx'
