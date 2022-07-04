@@ -78,7 +78,7 @@ class YaDiscUpload(VkDownload):
 
 if __name__ == '__main__':
     token_vk = str(input('Введите токен VK: '))
-    owner_id = str(input('Введите ваш id в VK: '))
+    owner_id = int(input('Введите ваш id в VK: '))
     file_path_to_save = 'Photos'
     downloader = VkDownload(token_vk)
     downloader.download_photo(file_path_to_save, owner_id)
