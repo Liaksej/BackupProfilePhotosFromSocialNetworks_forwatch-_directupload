@@ -66,6 +66,18 @@ class YaDiscUpload(VkDownload):
         else:
             print('Ошибка соединения. Попробуйте еще раз или обратитесь к разработчнику.')
 
+    def upload_json(self, disk_file_path: str):
+            url = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
+            headers = self.get_headers()
+            params = {'path': f'{disk_file_path}/photo_data.json', 'overwrite': 'true'}
+            response_get_link = requests.get(url=url, headers=headers, params=params)
+            request_for_url = response_get_link.json()
+            url_for_upload = request_for_url.get('href', '')
+            response_upload = requests.put(url_for_upload, data=open('photo_data.json'))
+            response_upload.raise_for_status()
+            if response_upload.status_code == 201:
+                print('Файл photo_data.json загружен успешно')
+
 
 if __name__ == '__main__':
     token_vk = str(input('Введите токен VK: '))
@@ -77,3 +89,4 @@ if __name__ == '__main__':
     disk_file_path = 'Photos_VK'
     uploader = YaDiscUpload(token_yd)
     uploader.direct_upload(disk_file_path)
+    uploader.upload_json(disk_file_path)
